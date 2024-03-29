@@ -2,26 +2,33 @@
   <div class="page__search">
     <form class="search-form" @submit.prevent>
       <h3 class="search-form__find-title">Поиск сотрудников</h3>
-      <input class="search-form__input"
+      <input v-model="userName"
+             class="search-form__input"
              placeholder="Введите Id или имя "
-             v-model="userName"
              @keyup.enter="getUserName">
       <h3 class="search-form__result-title">Результаты</h3>
-      <ul class="search-form__list"
-        v-if="userArr.length">
-          <li class="search-form__item"
-              v-for="user in userArr"
+      <ul  v-if="userArr.length"
+          class="search-form__list">
+          <li v-for="user in userArr"
               :key="user.id"
+              class="search-form__item"
               @click="setSelectedId(user.id)">
-            <img class="user-card__image_sm" src="@/assets/default-image_sm.png" alt="user pre img" >
+            <img class="user-card__image_sm"
+                 src="@/assets/default-image_sm.png"
+                 alt="user pre img" >
             <div class="user-card__text_sm">
-              <p class="user-card__name_sm">{{ user.username }}</p>
-              <p class="user-card__email_sm">{{ user.email}}</p>
+              <p class="user-card__name_sm">
+                {{ user.username }}
+              </p>
+              <p class="user-card__email_sm">
+                {{ user.email}}
+              </p>
             </div>
           </li>
       </ul>
-      <span class="user-card__empty-sm"
-            v-else>{{ store.state.statusLoading }}
+      <span v-else
+          class="user-card__empty-sm">
+        {{ store.state.statusLoading }}
       </span>
     </form>
   </div>

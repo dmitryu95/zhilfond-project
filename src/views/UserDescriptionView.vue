@@ -1,22 +1,26 @@
 <template>
   <div class="page__user">
-    <div class="user" v-if="store.state.selectedUser !== ''">
-      <img class="user__image" src="@/assets/default-user-img.png" alt="user img">
+    <div  v-if="selectedUser !== ''"
+        class="user">
+      <img class="user__image"
+           src="@/assets/default-user-img.png"
+           alt="user img">
       <div class="user__description">
-        <h3 class="user__name bold">{{store.state.selectedUser.name}}</h3>
+        <h3 class="user__name bold">{{selectedUser.name}}</h3>
         <div class="user__text-block">
           <p class="user__email bold">email: </p>
-          <span class="text"> {{store.state.selectedUser.email}} </span>
+          <span class="text"> {{selectedUser.email}} </span>
         </div>
         <div class="user__text-block">
           <p class="user__phone bold">phone: </p>
-          <span class="text"> {{store.state.selectedUser.phone}} </span>
+          <span class="text"> {{selectedUser.phone}} </span>
         </div>
         <p class="user__about bold">О себе:</p>
-        <p class="user__about text">{{store.state.selectedUser.company.catchPhrase}}</p>
+        <p class="user__about text">{{selectedUser.company.catchPhrase}}</p>
       </div>
     </div>
-    <div class="user__else" v-else>
+    <div v-else
+         class="user__else">
       <p class="user__else text">{{store.state.statusLoadingCard}}</p>
     </div>
   </div>
@@ -24,8 +28,11 @@
 
 <script setup>
   import { useStore } from "vuex";
+  import {computed} from "vue";
 
   const store = useStore();
+
+  const selectedUser = computed(() => store.getters.getUser)
 
 </script>
 
