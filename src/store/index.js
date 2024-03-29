@@ -54,7 +54,7 @@ export default createStore({
           searchFunction(input)
               .then(users => {
                   commit('setUsers', users);
-                  if (users.data && users.data.length !== 0) {
+                  if (users.data.length) {
                       commit('setStatusLoading', "");
                   } else {
                       commit('setStatusLoading', "Не найдено");
