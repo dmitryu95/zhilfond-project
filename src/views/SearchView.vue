@@ -9,18 +9,19 @@
       <h3 class="search-form__result-title">Результаты</h3>
       <ul  v-if="userArr.length"
           class="search-form__list">
-          <li v-for="user in userArr"
+          <li v-for="user in activeItem"
               :key="user.id"
               class="search-form__item"
               @click="setSelectedId(user.id)">
-            <img class="user-card__image_sm"
+            <img class="user-card__image"
                  src="@/assets/default-image_sm.png"
                  alt="user pre img" >
-            <div class="user-card__text_sm">
-              <p class="user-card__name_sm">
+            <div class="user-card__text"
+              :class="{'user-card__text_active' : user.active}">
+              <p class="user-card__name">
                 {{ user.username }}
               </p>
-              <p class="user-card__email_sm">
+              <p class="user-card__email">
                 {{ user.email}}
               </p>
             </div>
@@ -46,6 +47,10 @@ import {computed, ref, watch} from "vue";
     store.dispatch('fetchUsers', userName);
   }
 
+  const activeItem = computed(() => {
+    return userArr.value.map(user => ({...user, active: store.getters.getUser.id === user.id }));
+  })
+
   const userArr = computed(() => store.getters.getUsers)
 
   watch(userName, (value) => {
@@ -68,6 +73,10 @@ import {computed, ref, watch} from "vue";
 .page__search {
   width: 291px;
   box-sizing: border-box;
+}
+
+.active {
+  background-color: #E0E0E0;
 }
 
 .search-form {
@@ -110,25 +119,31 @@ import {computed, ref, watch} from "vue";
     border-radius: 10px;
     box-shadow: 0 0 0 1px rgb(0, 0, 0, 0.1);
     margin-bottom: 18px;
+    cursor: pointer;
   }
 }
 
 .user-card{
 
-  &__text_sm {
+  &__text {
     display: flex;
     flex-direction: column;
     margin: 0;
     align-items: baseline;
     padding: 15px;
+
+    &_active {
+      background-color: #E0E0E0;
+      cursor: default;
+    }
   }
 
-  &__image_sm {
+  &__image {
     width: 70px;
     height: 70px;
   }
 
-  &__name_sm {
+  &__name {
     padding: 0 0 2px 0;
     margin: 0;
     line-height: 20px;
@@ -138,7 +153,7 @@ import {computed, ref, watch} from "vue";
     text-align: left;
   }
 
-  &__email_sm {
+  &__email {
     padding: 0;
     margin: 0;
     line-height: 20px;
