@@ -13,7 +13,6 @@ export default createStore({
       return state.userArr
     },
     getUser(state) {
-        console.log(state.selectedUser)
       return state.selectedUser
     }
   },
@@ -41,7 +40,7 @@ export default createStore({
       fetchUsers({ commit }, userDate) {
           const input = userDate.value.trim();
 
-          if (input.length === 0) {
+          if (!input) {
               commit('clearList');
               alert("Поле ввода не должно быть пустым");
               commit('setStatusLoading', "Не найдено");
