@@ -107,6 +107,8 @@ import {computed, ref, watch} from "vue";
     padding: 0;
     flex-direction: column;
     overflow-y: auto;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar { width: 0; }
   }
 
   &__item {
