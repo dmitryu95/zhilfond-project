@@ -38,54 +38,45 @@ export default createStore({
     }
   },
   actions: {
-    fetchUsers({ commit }, userDate) {
-      const containsNumber = /\d/.test(userDate.value);
+      fetchUsers({ commit }, userDate) {
+          const input = userDate.value.trim();
 
-      if(userDate.value.trim().length >= 1) {
-          if(!containsNumber) {
-              getUserByName(userDate.value)
-                  .then( users => {
-                      commit('setStatusLoading', "*** Поиск ***")
-                      commit('setUsers', users)
-                      if(users.data.length !== 0) {
-                          commit('setStatusLoading', "")
-                      } else commit('setStatusLoading', "Не найдено")
-                  })
-                  .catch(err => {
-                      alert(`ошибка :${err.message}`)
-                      commit ('setUsers', '')
-                  })
-          } else {
-              getUsersById(userDate.value)
-                  .then(users => {
-                      commit('setStatusLoading', "*** Поиск ***")
-                      commit('setUsers', users)
-                      if(users.data.length !== 0) {
-                          commit('setStatusLoading', "")
-                      } else commit('setStatusLoading', "Не найдено")
-                  })
-                  .catch(err => {
-                      alert(`ошибка :${err.message}`)
-                      commit('setUsers', '')
-                  })
+          if (input.length === 0) {
+              commit('clearList');
+              alert("Поле ввода не должно быть пустым");
+              commit('setStatusLoading', "Не найдено");
+              return;
           }
-      } else {
-          commit('clearList')
-          alert("Поле ввода не должно быть пустым")
-          commit('setStatusLoading', "Не найдено")
-      }
-    },
-    fetchUser({commit}, id) {
-        if(id > 0){
-            getUsersById(id)
-                .then( user => {
-                    commit("setLoadingCard", 'Выберите сотрудника, чтобы посмотреть его профиль')
-                    commit('setSelectedUser', user)
-                })
-                .catch(err => {
-                    alert(`ошибка :${err.message}`)
-                })
+
+          const searchFunction = /\d/.test(input) ? getUsersById : getUserByName;
+
+          commit('setStatusLoading', "*** Поиск ***");
+
+          searchFunction(input)
+              .then(users => {
+                  commit('setUsers', users);
+                  if (users.data && users.data.length !== 0) {
+                      commit('setStatusLoading', "");
+                  } else {
+                      commit('setStatusLoading', "Не найдено");
+                  }
+              })
+              .catch(err => {
+                  alert(`Ошибка: ${err.message}`);
+                  commit('setUsers', '');
+              });
+      },
+        fetchUser({commit}, id) {
+            if(id > 0){
+                getUsersById(id)
+                    .then( user => {
+                        commit("setLoadingCard", 'Выберите сотрудника, чтобы посмотреть его профиль')
+                        commit('setSelectedUser', user)
+                    })
+                    .catch(err => {
+                        alert(`ошибка :${err.message}`)
+                    })
+            }
         }
-    }
   }
 })
