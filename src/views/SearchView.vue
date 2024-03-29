@@ -4,14 +4,13 @@
       <h3 class="search-form__find-title">Поиск сотрудников</h3>
       <input class="search-form__input"
              placeholder="Введите Id или имя "
-             :value="userName"
-             @input="clearAll"
+             v-model="userName"
              @keyup.enter="getUserName">
       <h3 class="search-form__result-title">Результаты</h3>
       <ul class="search-form__list"
-        v-if="store.state.userArr.length !== 0">
+        v-if="userArr.length">
           <li class="search-form__item"
-              v-for="user in store.state.userArr"
+              v-for="user in userArr"
               :key="user.id"
               @click="setSelectedId(user.id)">
             <img class="user-card__image_sm" src="@/assets/default-image_sm.png" alt="user pre img" >
@@ -29,27 +28,26 @@
 </template>
 
 <script setup>
-  import { ref } from "vue";
+import {computed, ref, watch} from "vue";
   import { useStore } from "vuex";
 
   const store = useStore();
   const userName = ref('')
 
-  const getUserName = (event) => {
+  const getUserName = () => {
     store.commit('setStatusLoading', "*** поиск ***")
-    userName.value = event.target.value;
     store.dispatch('fetchUsers', userName);
   }
 
-  const clearAll = (event) => {
-    if(!event.target.value.length) {
-      userName.value = '';
+  const userArr = computed(() => store.getters.getUsers)
+
+  watch(userName, (value) => {
+    if(value === '') {
       store.commit('clearList')
       store.commit('clearCard')
       store.commit('setStatusLoading', "начните поиск ")
     }
-
-  }
+  })
 
   const setSelectedId = (id) => {
     store.commit("setLoadingCard", '*** Загрузка карточки ***')
